@@ -55,97 +55,117 @@ var instance = [
 
 function validate(schema, instance) {
 	
+	// Validate JSON type of the instance
+	
 	if ('number' == schema['type']) {
 		if (typeof(instance) == "number") {
-			console.log('number');
+			//console.log('number');
+			if (schema['const']) {
+				if (instance != schema['const']) {
+					return false;
+				}
+			}
+			else {
+				console.log("path:", schema);
+			}
 			return true;
 		}
 		else {
-			console.log('not number');
+			//console.log('not number');
 			return false;
 		}
 	};
 	
 	if ('string' == schema['type']) {
 		if (typeof(instance) == "string") {
-			console.log('string');
+			//console.log('string');
 			if (schema['const']) {
-				//console.log('const');
-				if (instance == schema['const']) {
-					//console.log(instance);
-					return true;
-				}
-				else {
-					//console.log('wrong', instance);
+				if (instance != schema['const']) {
 					return false;
 				}
+			}
+			else {
+				console.log("path:", schema);
 			}
 			return true;
 		}
 		else {
-			console.log('not string');
+			//console.log('not string');
 			return false;
 		}
 	};
 	
 	if ('boolean' == schema['type']) {
 		if (typeof(instance) == "boolean") {
-			console.log('boolean');
+			//console.log('boolean');
+			if (schema['const']) {
+				if (instance != schema['const']) {
+					return false;
+				}
+			}
+			else {
+				console.log("path:", schema);
+			}
 			return true;
 		}
 		else {
-			console.log('not boolean');
+			//console.log('not boolean');
 			return false;
 		}
 	};
 	
 	if ('object' == schema['type']) {
 		if (typeof(instance) == "object" && ! Array.isArray(instance) ) {
-			console.log('object');
+			//console.log('object');
 		}
-		else
-			console.log('not object');
+		else {
+			//console.log('not object');
+		}
 	};
 	
 	if ('array' == schema['type']) {
-		if (Array.isArray(instance) ) 
-			console.log('array');
-		else
-			console.log('not array');
+		if (Array.isArray(instance) ) {
+			//console.log('array');
+		}
+		else {
+			//console.log('not array');
+		}
 	};
 	
+	// Apply one or more schemas to the instance
+	
 	if (schema['anyOf']) {
-		console.log('anyOf');
+		//console.log('anyOf');
 		schema['anyOf'].forEach(function (subschema) {
-			console.log(subschema); 
 			validate(subschema, instance);
 			} );
 	};
 	
 	if (schema['allOf']) {
-		console.log('allOf');
+		//console.log('allOf');
 		schema['allOf'].forEach(function (subschema) {
 			validate(subschema, instance);
 			} );
 	};
 	
 	if (schema['oneOf']) {
-		console.log('oneOf');
+		//console.log('oneOf');
 		schema['oneOf'].forEach(function (subschema) {
-			console.log(subschema); 
 			validate(subschema, instance);
 			} );
 	};
 	
+	// apply a schema to one or more items or properties in the instance
+	
 	if (schema['items']) {
-		console.log('items');
+		//console.log('items');
 		if (schema['additionalItems']) {
-			console.log('additionalItems');
+			//console.log('additionalItems');
 		};
 	};
 	
 	if (schema['contains']) {
-		console.log('contains');
+		//console.log('contains');
 		instance.forEach(function (item) {
 			validate(schema['contains'], item);
 			
@@ -153,22 +173,18 @@ function validate(schema, instance) {
 	};
 	
 	if (schema['properties']) {
-		console.log('properties');
-		//console.log(schema['properties']);
-		//console.log(instance);
+		//console.log('properties');
 		for ( var schemaproperty in schema['properties']) {
 			if (schemaproperty in instance) {
-				//console.log(schemaproperty);
-				//console.log(instance);
 				if ( validate( schema['properties'][schemaproperty], instance[schemaproperty] ) ) {
-					console.log(schema['properties'][schemaproperty]);
+					//console.log(schema['properties'][schemaproperty]);
 				}
 			}
 		}
 	};
 	
 	if (schema['additionalProperties']) {
-		console.log('additionalProperties');
+		//console.log('additionalProperties');
 	};
 	
 	return;
