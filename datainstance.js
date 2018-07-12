@@ -53,7 +53,11 @@ var instance = [
   }
 ];
 
-function validate(schema, instance) {
+function validate(schema, instance, path) {
+	
+	if ( undefined  == path ) {
+		path = "";
+	}	
 	
 	// Validate JSON type of the instance
 	
@@ -66,7 +70,9 @@ function validate(schema, instance) {
 				}
 			}
 			else {
-				console.log("path:", schema);
+				var dictentry = {};
+				dictentry[path] = schema;
+				console.log(dictentry);
 			}
 			return true;
 		}
@@ -85,7 +91,9 @@ function validate(schema, instance) {
 				}
 			}
 			else {
-				console.log("path:", schema);
+				var dictentry = {};
+				dictentry[path] = schema;
+				console.log(dictentry);
 			}
 			return true;
 		}
@@ -104,7 +112,9 @@ function validate(schema, instance) {
 				}
 			}
 			else {
-				console.log("path:", schema);
+				var dictentry = {};
+				dictentry[path] = schema;
+				console.log(dictentry);
 			}
 			return true;
 		}
@@ -137,21 +147,21 @@ function validate(schema, instance) {
 	if (schema['anyOf']) {
 		//console.log('anyOf');
 		schema['anyOf'].forEach(function (subschema) {
-			validate(subschema, instance);
+			validate(subschema, instance, path);
 			} );
 	};
 	
 	if (schema['allOf']) {
 		//console.log('allOf');
 		schema['allOf'].forEach(function (subschema) {
-			validate(subschema, instance);
+			validate(subschema, instance, path);
 			} );
 	};
 	
 	if (schema['oneOf']) {
 		//console.log('oneOf');
 		schema['oneOf'].forEach(function (subschema) {
-			validate(subschema, instance);
+			validate(subschema, instance, path);
 			} );
 	};
 	
@@ -166,9 +176,10 @@ function validate(schema, instance) {
 	
 	if (schema['contains']) {
 		//console.log('contains');
+		var index = 0;
 		instance.forEach(function (item) {
-			validate(schema['contains'], item);
-			
+			validate(schema['contains'], item, path + '/' + index.toString() );
+			index +=1;
 		});
 	};
 	
@@ -176,7 +187,9 @@ function validate(schema, instance) {
 		//console.log('properties');
 		for ( var schemaproperty in schema['properties']) {
 			if (schemaproperty in instance) {
-				if ( validate( schema['properties'][schemaproperty], instance[schemaproperty] ) ) {
+				if ( validate( schema['properties'][schemaproperty], 
+						instance[schemaproperty], 
+						path + '/' + schemaproperty) ) {
 					//console.log(schema['properties'][schemaproperty]);
 				}
 			}
@@ -191,8 +204,13 @@ function validate(schema, instance) {
 }
 
 var valid = ajv.validate(schema, instance);
-console.log(valid);
+console.log('ajv valid: ', valid);
 if (!valid) 
 	console.log(ajv.errors);
+console.log();
+
+var Pointer = require('json-pointer');
+console.log(Pointer.dict(instance));
+console.log();
 
 validate(schema, instance);
