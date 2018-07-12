@@ -4,6 +4,8 @@
 var Ajv = require('ajv');
 var ajv = new Ajv(); // options can be passed, e.g. {allErrors: true}
 
+var dictionary = [];
+
 var schema = {
   "type": "array",
   "allOf": [
@@ -33,7 +35,7 @@ var schema = {
   		  },
   		  "vs": {
   		    "type": "string",
-  		    "@type": "iot:ApplicationType"
+  		    "@type": "iot:ApplicationTypeData"
   		  }
   		},
   		"required": ["n", "vs"]
@@ -70,9 +72,10 @@ function validate(schema, instance, path) {
 				}
 			}
 			else {
-				var dictentry = {};
-				dictentry[path] = schema;
-				console.log(dictentry);
+				var dictentry = schema;
+				dictentry['path'] = path;
+				dictionary.push(dictentry);
+				//console.log(dictentry);
 			}
 			return true;
 		}
@@ -91,9 +94,10 @@ function validate(schema, instance, path) {
 				}
 			}
 			else {
-				var dictentry = {};
-				dictentry[path] = schema;
-				console.log(dictentry);
+				var dictentry = schema;
+				dictentry['path'] = path;
+				dictionary.push(dictentry);
+				//console.log(dictentry);
 			}
 			return true;
 		}
@@ -112,9 +116,10 @@ function validate(schema, instance, path) {
 				}
 			}
 			else {
-				var dictentry = {};
-				dictentry[path] = schema;
-				console.log(dictentry);
+				var dictentry = schema;
+				dictentry['path'] = path;
+				dictionary.push(dictentry);
+				//console.log(dictentry);
 			}
 			return true;
 		}
@@ -185,12 +190,12 @@ function validate(schema, instance, path) {
 	
 	if (schema['properties']) {
 		//console.log('properties');
-		for ( var schemaproperty in schema['properties']) {
-			if (schemaproperty in instance) {
-				if ( validate( schema['properties'][schemaproperty], 
-						instance[schemaproperty], 
-						path + '/' + schemaproperty) ) {
-					//console.log(schema['properties'][schemaproperty]);
+		for ( var property in schema['properties']) {
+			if (property in instance) {
+				if ( validate( schema['properties'][property], 
+						instance[property], 
+						path + '/' + property) ) {
+					//console.log(schema['properties'][property]);
 				}
 			}
 		}
@@ -203,14 +208,42 @@ function validate(schema, instance, path) {
 	return;
 }
 
+
+function get(filter) 
+// return the value in a dictionary that includes a value property
+{
+	return("test");
+};
+
+function set(filter) 
+// update the value based on a filter spec with a value property
+{
+	return("test");
+};
+
+//
+// check with ajv for actual validation
 var valid = ajv.validate(schema, instance);
 console.log('ajv valid: ', valid);
 if (!valid) 
 	console.log(ajv.errors);
 console.log();
 
+// enumerate instance properties
 var Pointer = require('json-pointer');
 console.log(Pointer.dict(instance));
 console.log();
 
+// run validator-indexer
 validate(schema, instance);
+
+// display the dictionary
+console.log(dictionary);
+
+// get function
+console.log( get({"$type": "iot:ApplicationTypeData"}) );
+
+// set function
+set({"$type": "iot:ApplicationTypeData", "value": "Light Bulb"});
+
+console.log( get({"$type": "iot:ApplicationTypeData"}) );
