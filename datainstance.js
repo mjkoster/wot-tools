@@ -212,7 +212,17 @@ function validate(schema, instance, path) {
 function get(filter) 
 // return the value in a dictionary that includes a value property
 {
-	return("test");
+	var item = {};
+//	dictionary.forEach( function (dictitem) {
+	for (index in dictionary) {
+		for( var filterkey in filter ) {
+			if (filterkey in dictionary[index] && filter[filterkey] == dictionary[index][filterkey]) {
+				item = Object.assign(dictionary[index]);
+				item.value = Pointer.get(instance, item.path);
+				return item;
+			};
+		};
+	};
 };
 
 function set(filter) 
@@ -241,9 +251,12 @@ validate(schema, instance);
 console.log(dictionary);
 
 // get function
-console.log( get({"$type": "iot:ApplicationTypeData"}) );
+console.log( get({"@type": "iot:ApplicationTypeData"}) );
+
+console.log(get({"@type": "iot:ApplicationTypeData"}).value);
 
 // set function
-set({"$type": "iot:ApplicationTypeData", "value": "Light Bulb"});
+//set({"@type": "iot:ApplicationTypeData", "value": "Light Bulb"});
 
-console.log( get({"$type": "iot:ApplicationTypeData"}) );
+
+console.log( get({"@type": "iot:ApplicationTypeData"}).value );
