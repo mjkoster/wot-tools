@@ -72,10 +72,7 @@ function validate(schema, instance, path) {
 				}
 			}
 			else {
-				var dictentry = schema;
-				dictentry['path'] = path;
-				dictionary.push(dictentry);
-				//console.log(dictentry);
+				dictionary.push( Object.assign({'path':path}, schema) );
 			}
 			return true;
 		}
@@ -94,10 +91,7 @@ function validate(schema, instance, path) {
 				}
 			}
 			else {
-				var dictentry = schema;
-				dictentry['path'] = path;
-				dictionary.push(dictentry);
-				//console.log(dictentry);
+				dictionary.push( Object.assign({'path':path}, schema) );
 			}
 			return true;
 		}
@@ -116,10 +110,7 @@ function validate(schema, instance, path) {
 				}
 			}
 			else {
-				var dictentry = schema;
-				dictentry['path'] = path;
-				dictionary.push(dictentry);
-				//console.log(dictentry);
+				dictionary.push( Object.assign({'path':path}, schema) );
 			}
 			return true;
 		}
@@ -195,7 +186,6 @@ function validate(schema, instance, path) {
 				if ( validate( schema['properties'][property], 
 						instance[property], 
 						path + '/' + property) ) {
-					//console.log(schema['properties'][property]);
 				}
 			}
 		}
@@ -257,7 +247,6 @@ console.log(dictionary);
 console.log();
 
 // get function
-// console.log( get({"@type": "iot:ApplicationTypeData"}) );
 console.log('>>> console.log(get({"@type": "iot:ApplicationTypeData"}).value);');
 console.log(get({"@type": "iot:ApplicationTypeData"}).value);
 console.log();
