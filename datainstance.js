@@ -213,7 +213,6 @@ function get(filter)
 // return the value in a dictionary that includes a value property
 {
 	var item = {};
-//	dictionary.forEach( function (dictitem) {
 	for (index in dictionary) {
 		for( var filterkey in filter ) {
 			if (filterkey in dictionary[index] && filter[filterkey] == dictionary[index][filterkey]) {
@@ -228,7 +227,14 @@ function get(filter)
 function set(filter) 
 // update the value based on a filter spec with a value property
 {
-	return("test");
+	for (index in dictionary) {
+		for( var filterkey in filter ) {
+			if (filterkey in dictionary[index] && filter[filterkey] == dictionary[index][filterkey]) {
+				Pointer.set(instance, dictionary[index].path, filter.value);
+				return;
+			};
+		};
+	};
 };
 
 //
@@ -256,7 +262,7 @@ console.log( get({"@type": "iot:ApplicationTypeData"}) );
 console.log(get({"@type": "iot:ApplicationTypeData"}).value);
 
 // set function
-//set({"@type": "iot:ApplicationTypeData", "value": "Light Bulb"});
+set({"@type": "iot:ApplicationTypeData", "value": "Light Bulb"});
 
 
 console.log( get({"@type": "iot:ApplicationTypeData"}).value );
