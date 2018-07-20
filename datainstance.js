@@ -258,3 +258,5 @@ console.log();
 
 console.log('>>> console.log( get({"@type": "iot:ApplicationTypeData"}).value );');
 console.log( get({"@type": "iot:ApplicationTypeData"}).value );
+
+console.log( get({"@type": "iot:ApplicationTypeData"}));
