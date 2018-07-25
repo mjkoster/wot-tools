@@ -1,0 +1,70 @@
+// flat JSON-LD TD representation with named nodes for interactions
+
+[
+  {
+    "@id": "_:b0",
+    "@type": ["Thing", "iot:ThermostatCapability"],
+    "providesInteraction": ["temperature", "setTemperature"]
+  },
+  {
+    "@id": "temperature",
+    "@type": ["Property", "iot:Temperature", "DataSchema", "iot:TemperatureData"],
+    "type": "number",
+    "minimumPropertyValue": 0,
+    "maximumPropertyValue": 150,
+    "hasForm": "_:b2"
+  },
+  {
+    "@id": "settemperature",
+    "@type": ["Action", "iot:SetTemperature"],
+    "acceptsInput": "_:b1",
+    "hasForm": "_:b3"
+  },
+  {
+    "@id": "_:b1",
+    "@type": ["DataSchema"],
+    "type": "number",
+    "minimumPropertyValue": 0,
+    "maximumPropertyValue": 150
+  },
+  {
+    "@id": "_:b2",
+    "@type": ["Form"],
+    "href": "http://example.com/thermostat/temperature"
+  },
+  {
+    "@id": "_:b3",
+    "@type": ["Form"],
+    "href": "http://example.com/thermostat/temperaturesetpoint"
+  }
+]
+
+// Framed as JSON TD
+
+{
+  "@context": [
+    "..."
+  ],
+  "id": "urn:uuid:e821a969-551b-4967-83b6-27eea0aa6a6e",
+  "properties": {
+    "temperature": {
+      "@type": ["iot:Temperature", "iot:TemperatureData"],
+      "type": "number",
+      "minimum": 0,
+      "maximum": 150,
+      "forms": [{"href": "http://example.com/thermostat/temperature"}]
+    }
+  },
+  "actions": {
+    "settemperature": {
+      "@type": ["iot:SetTemperatureAction"],
+      "input": {
+        "@type": ["iot:TemperatureData", "iot:TemperatureSetPointData"],
+        "type": "number",
+        "minimum": 0,
+        "maximum": 150,
+      },
+      "forms": [{"href": "http://example.com/thermostat/temperaturesetpoint"}]
+    }
+  }
+}
